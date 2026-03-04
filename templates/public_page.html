@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ page['title'] }} | MiniCMS{% endblock %}
+{% block content %}
+<article>
+  <h2>{{ page['title'] }}</h2>
+  <p class="timestamp">Last updated: {{ page['updated_at'] }}</p>
+  <div class="content">{{ page['content'] | replace('\n', '<br>') | safe }}</div>
+</article>
+{% endblock %}

@@ -1,0 +1,104 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f7f8fb;
+  color: #222;
+}
+
+header {
+  background: #1d3557;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+header a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+main {
+  max-width: 900px;
+  margin: 1.5rem auto;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.flash-list {
+  list-style: none;
+  padding: 0.75rem;
+  background: #e5f9e7;
+  border: 1px solid #b9e8c0;
+  border-radius: 6px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button {
+  background: #457b9d;
+  color: white;
+  padding: 0.55rem 0.85rem;
+  border-radius: 6px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.link-button {
+  border: none;
+  background: transparent;
+  color: #b00020;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+input,
+textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.timestamp {
+  color: #666;
+  font-size: 0.9rem;
+}
