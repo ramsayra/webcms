@@ -23,6 +23,11 @@
     <div class="theme-slot">{{ active_theme['header_html'] | safe }}</div>
     {% endif %}
 
+        <a href="{{ url_for('public_index') }}">Public site</a>
+        <a href="{{ url_for('admin_index') }}">Admin</a>
+      </nav>
+    </header>
+
     <main>
       {% with messages = get_flashed_messages() %}
       {% if messages %}

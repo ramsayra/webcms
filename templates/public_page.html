@@ -9,4 +9,9 @@
 
 {% if page['custom_css'] %}<style>{{ page['custom_css'] | safe }}</style>{% endif %}
 {% if page['custom_js'] %}<script>{{ page['custom_js'] | safe }}</script>{% endif %}
+<article>
+  <h2>{{ page['title'] }}</h2>
+  <p class="timestamp">Last updated: {{ page['updated_at'] }}</p>
+  <div class="content">{{ page['content'] | replace('\n', '<br>') | safe }}</div>
+</article>
 {% endblock %}

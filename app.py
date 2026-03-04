@@ -51,6 +51,15 @@ ALLOWED_UPLOAD_EXTENSIONS = {
     "ppt",
     "pptx",
 }
+import sqlite3
+from pathlib import Path
+from typing import Any
+
+from flask import Flask, abort, flash, g, redirect, render_template, request, url_for
+
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_DB_PATH = BASE_DIR / "cms.db"
+
 
 
 def resolve_db_path() -> Path:
@@ -73,6 +82,9 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", secrets.token_hex(32))
 app.config["DB_PATH"] = resolve_db_path()
 app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "dev-secret-change-me")
+app.config["DB_PATH"] = resolve_db_path()
 
 
 def get_db() -> sqlite3.Connection:
@@ -257,6 +269,11 @@ def view_page(slug: str) -> str:
     ).fetchone()
     if page is None:
         return render_template("not_found.html"), 404
+        "SELECT title, content, updated_at FROM pages WHERE slug = ? AND is_published = 1",
+        (slug,),
+    ).fetchone()
+    if page is None:
+        abort(404)
     return render_template("public_page.html", page=page)
 
 
@@ -265,6 +282,7 @@ def admin_entry() -> str:
     if not is_logged_in():
         return redirect(url_for("admin_login", next="/admin"))
 
+def admin_index() -> str:
     db = get_db()
     pages = db.execute(
         "SELECT id, title, slug, is_published, updated_at FROM pages ORDER BY updated_at DESC"
@@ -308,6 +326,11 @@ def create_page() -> str:
         custom_css = request.form.get("custom_css", "").strip()
         custom_js = request.form.get("custom_js", "").strip()
         template_key = request.form.get("template_key", "default")
+@app.route("/admin/new", methods=["GET", "POST"])
+def create_page() -> str:
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        content = request.form.get("content", "").strip()
         slug = normalize_slug(request.form.get("slug", "") or title)
         is_published = 1 if request.form.get("is_published") else 0
 
@@ -324,6 +347,12 @@ def create_page() -> str:
             db.commit()
             flash("Page created successfully.")
             return redirect(url_for("admin_entry"))
+                "INSERT INTO pages (title, slug, content, is_published) VALUES (?, ?, ?, ?)",
+                (title, slug, content, is_published),
+            )
+            db.commit()
+            flash("Page created successfully.")
+            return redirect(url_for("admin_index"))
         except sqlite3.IntegrityError:
             flash("Slug already exists. Please choose another slug.")
 
@@ -340,6 +369,10 @@ def edit_page(page_id: int) -> str:
     page = db.execute("SELECT * FROM pages WHERE id = ?", (page_id,)).fetchone()
     if page is None:
         return render_template("not_found.html"), 404
+    db = get_db()
+    page = db.execute("SELECT * FROM pages WHERE id = ?", (page_id,)).fetchone()
+    if page is None:
+        abort(404)
 
     if request.method == "POST":
         title = request.form.get("title", "").strip()
@@ -366,6 +399,14 @@ def edit_page(page_id: int) -> str:
             db.commit()
             flash("Page updated.")
             return redirect(url_for("admin_entry"))
+                SET title = ?, slug = ?, content = ?, is_published = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+                """,
+                (title, slug, content, is_published, page_id),
+            )
+            db.commit()
+            flash("Page updated.")
+            return redirect(url_for("admin_index"))
         except sqlite3.IntegrityError:
             flash("Slug already exists. Please choose another slug.")
 
@@ -503,6 +544,7 @@ def admin_menus() -> str:
 @app.route("/uploads/<path:filename>")
 def uploaded_file(filename: str):
     return send_from_directory(UPLOADS_DIR, filename)
+    return redirect(url_for("admin_index"))
 
 
 @app.route("/admin/export")
@@ -514,6 +556,9 @@ def export_pages() -> str:
     db = get_db()
     rows = db.execute(
         "SELECT title, slug, content, template_key, custom_css, custom_js, is_published, created_at, updated_at FROM pages"
+    db = get_db()
+    rows = db.execute(
+        "SELECT title, slug, content, is_published, created_at, updated_at FROM pages"
     ).fetchall()
     payload = [dict(row) for row in rows]
     return app.response_class(

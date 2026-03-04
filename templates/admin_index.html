@@ -13,6 +13,7 @@
         <button type="submit" class="button danger">Logout</button>
       </form>
     </div>
+    <a class="button" href="{{ url_for('create_page') }}">+ New page</a>
   </div>
 
   <p><a href="{{ url_for('export_pages') }}">Export all pages (JSON)</a></p>
@@ -20,11 +21,20 @@
   <table>
     <thead>
       <tr><th>Title</th><th>Slug</th><th>Status</th><th>Updated</th><th>Actions</th></tr>
+      <tr>
+        <th>Title</th>
+        <th>Slug</th>
+        <th>Status</th>
+        <th>Updated</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
       {% for page in pages %}
       <tr>
         <td>{{ page['title'] }}</td><td>{{ page['slug'] }}</td>
+        <td>{{ page['title'] }}</td>
+        <td>{{ page['slug'] }}</td>
         <td>{{ 'Published' if page['is_published'] else 'Draft' }}</td>
         <td>{{ page['updated_at'] }}</td>
         <td>
@@ -36,6 +46,9 @@
       </tr>
       {% else %}
       <tr><td colspan="5">No pages yet.</td></tr>
+      <tr>
+        <td colspan="5">No pages yet. Create your first page.</td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>
