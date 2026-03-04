@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ page['title'] }} | MiniCMS{% endblock %}
+{% block content %}
+<article class="{{ 'landing' if page['template_key'] == 'landing' else '' }}">
+  <h2>{{ page['title'] }}</h2>
+  <p class="timestamp">Last updated: {{ page['updated_at'] }}</p>
+  <div class="content">{{ page['content'] | safe }}</div>
+</article>
+
+{% if page['custom_css'] %}<style>{{ page['custom_css'] | safe }}</style>{% endif %}
+{% if page['custom_js'] %}<script>{{ page['custom_js'] | safe }}</script>{% endif %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Menus | MiniCMS{% endblock %}
+{% block content %}
+<section>
+  <div class="toolbar"><h2>Menus</h2><a class="button secondary" href="{{ url_for('admin_entry') }}">Back</a></div>
+
+  <form method="post" class="form-grid card">
+    <input type="hidden" name="action" value="create" />
+    <label>Label <input name="label" required /></label>
+    <label>URL <input name="url" placeholder="/about" required /></label>
+    <label>Sort Order <input type="number" name="sort_order" value="0" /></label>
+    <button class="button" type="submit">Add Menu Item</button>
+  </form>
+
+  <table>
+    <thead><tr><th>Label</th><th>URL</th><th>Order</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for i in items %}
+      <tr>
+        <td>{{ i['label'] }}</td><td>{{ i['url'] }}</td><td>{{ i['sort_order'] }}</td>
+        <td>
+          <form method="post"><input type="hidden" name="action" value="delete" /><input type="hidden" name="item_id" value="{{ i['id'] }}" /><button type="submit" class="link-button">Delete</button></form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4">No menu items yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

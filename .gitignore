@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+cms.db
+.venv/
+uploads/
+data/
