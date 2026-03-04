@@ -5,11 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}MiniCMS{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    {% if active_theme and active_theme['custom_css'] %}
+    <style>{{ active_theme['custom_css'] | safe }}</style>
+    {% endif %}
   </head>
   <body>
     <header>
       <h1><a href="{{ url_for('public_index') }}">MiniCMS</a></h1>
       <nav>
+        {% for item in menu_items %}
+        <a href="{{ item['url'] }}">{{ item['label'] }}</a>
+        {% endfor %}
+      </nav>
+    </header>
+
+    {% if active_theme and active_theme['header_html'] %}
+    <div class="theme-slot">{{ active_theme['header_html'] | safe }}</div>
+    {% endif %}
+
         <a href="{{ url_for('public_index') }}">Public site</a>
         <a href="{{ url_for('admin_index') }}">Admin</a>
       </nav>
@@ -28,5 +41,9 @@
 
       {% block content %}{% endblock %}
     </main>
+
+    {% if active_theme and active_theme['footer_html'] %}
+    <div class="theme-slot">{{ active_theme['footer_html'] | safe }}</div>
+    {% endif %}
   </body>
 </html>

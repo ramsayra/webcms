@@ -3,9 +3,32 @@
 {% block content %}
 <section>
   <h2>{{ 'Edit page' if is_edit else 'Create new page' }}</h2>
+  <p>Public website is always browsable normally. Admin tools are only under /admin.</p>
   <form method="post" class="form-grid">
     <label>Title
       <input name="title" value="{{ page['title'] if page and 'title' in page else '' }}" required />
+    </label>
+    <label>Slug (optional)
+      <input name="slug" value="{{ page['slug'] if page and 'slug' in page else '' }}" placeholder="auto-from-title" />
+    </label>
+    <label>Template Layout
+      <select name="template_key">
+        {% set current_tpl = page['template_key'] if page and 'template_key' in page else 'default' %}
+        <option value="default" {% if current_tpl == 'default' %}selected{% endif %}>Default</option>
+        <option value="landing" {% if current_tpl == 'landing' %}selected{% endif %}>Landing</option>
+      </select>
+    </label>
+    <label>Page Content (HTML allowed)
+      <textarea name="content" rows="12" required>{{ page['content'] if page and 'content' in page else '' }}</textarea>
+    </label>
+    <label>Custom CSS
+      <textarea name="custom_css" rows="5">{{ page['custom_css'] if page and 'custom_css' in page else '' }}</textarea>
+    </label>
+    <label>Custom JavaScript
+      <textarea name="custom_js" rows="5">{{ page['custom_js'] if page and 'custom_js' in page else '' }}</textarea>
+    </label>
+    <label class="inline">
+      <input type="checkbox" name="is_published" {% if page and ('is_published' in page) and page['is_published'] %}checked{% endif %} /> Published
     </label>
 
     <label>Slug (optional)
