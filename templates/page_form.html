@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit page' if is_edit else 'New page' }} | MiniCMS{% endblock %}
+{% block content %}
+<section>
+  <h2>{{ 'Edit page' if is_edit else 'Create new page' }}</h2>
+  <form method="post" class="form-grid">
+    <label>Title
+      <input name="title" value="{{ page['title'] if page and 'title' in page else '' }}" required />
+    </label>
+
+    <label>Slug (optional)
+      <input name="slug" value="{{ page['slug'] if page and 'slug' in page else '' }}" placeholder="auto-from-title" />
+    </label>
+
+    <label>Content
+      <textarea name="content" rows="12" required>{{ page['content'] if page and 'content' in page else '' }}</textarea>
+    </label>
+
+    <label class="inline">
+      <input type="checkbox" name="is_published" {% if page and ('is_published' in page) and page['is_published'] %}checked{% endif %} />
+      Published
+    </label>
+
+    <button class="button" type="submit">{{ 'Save changes' if is_edit else 'Create page' }}</button>
+  </form>
+</section>
+{% endblock %}

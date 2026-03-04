@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}MiniCMS | Home{% endblock %}
+{% block content %}
+<section>
+  <h2>Published pages</h2>
+  {% if pages %}
+  <ul>
+    {% for page in pages %}
+    <li>
+      <a href="{{ url_for('view_page', slug=page['slug']) }}">{{ page['title'] }}</a>
+      <small>updated {{ page['updated_at'] }}</small>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No published pages yet. Create one in Admin and mark it as published.</p>
+  {% endif %}
+</section>
+{% endblock %}
